@@ -24,13 +24,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private ArrayAdapter<String> adapter;
     private ArrayList<String> pokemonList = new ArrayList<>();
 
+    private Spinner generationSpinner = findViewById(R.id.generationSpinner);
+
     private boolean checkApi = true;
 
+    //This needs to run under a second thread to avoid the network on main error
     private Thread secondThread = new Thread(() -> {
         while(true){
             if(checkApi){
-                Spinner tempSpinner = findViewById(R.id.generationSpinner);
-                String generation = tempSpinner.getSelectedItem().toString();
+                String generation = generationSpinner.getSelectedItem().toString();
                 api = new Api(generation);
                 checkApi = false;
             }
@@ -38,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     });
 
     public void handleSearchForPokemon(){
-        EditText searchTf = findViewById(R.id.searchText);
-        searchTf.addTextChangedListener(new TextWatcher() {
+        EditText searchTextField = findViewById(R.id.searchText);
+        searchTextField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 //do nothing
@@ -67,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         secondThread.start();
 
-
-
         //Handler makes the programm wait for 2 seconds until filling list with api values
         new Handler().postDelayed(() -> {
             listView = findViewById(R.id.pokemonList);
@@ -76,9 +76,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, pokemonList);
             listView.setAdapter(adapter);
             runOnUiThread(() -> adapter.notifyDataSetChanged());
-
-            Spinner spinner = (Spinner) findViewById(R.id.generationSpinner);
-            spinner.setOnItemSelectedListener(this);
+            generationSpinner.setOnItemSelectedListener(this);
             //secondThread.suspend();
         }, 3000);
         handleSearchForPokemon();
@@ -92,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             pokemonList = api.getPokemonNames();
             adapter.clear();
             adapter.addAll(pokemonList);
-            Log.d("test", pokemonList.get(1));
             handleSearchForPokemon();
         }, 3000);
 
