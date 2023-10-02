@@ -14,10 +14,16 @@ public class Api {
     ObjectMapper objectMapper = new ObjectMapper();
     ArrayList<Pokemon> pokemonList = new ArrayList<>();
 
-    private void loadPokemons(){
+    private void loadPokemons(String generation){
         try {
+            int generationNumber = 2;
+            if(!generation.equals("All generations")){
+                String[] split = generation.split(" ");
+                generationNumber = Integer.parseInt(split[1]) + 1;
+            }
+
             //Pokedex: 1= full dex, from 2 onward, different gens
-            URL url = new URL("https://pokeapi.co/api/v2/pokedex/2");
+            URL url = new URL("https://pokeapi.co/api/v2/pokedex/" + generationNumber);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = httpURLConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -34,8 +40,8 @@ public class Api {
         }
     }
 
-    public Api() {
-        loadPokemons();
+    public Api(String generation) {
+        loadPokemons(generation);
     }
 
     public ArrayList<String> getPokemonNames() {

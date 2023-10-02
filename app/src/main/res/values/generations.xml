@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="generation_array">$
+        <item>All generations</item>
+        <item>Generation 1</item>
+        <item>Generation 2</item>
+        <item>Generation 3</item>
+        <item>Generation 4</item>
+        <item>Generation 5</item>
+        <item>Generation 6</item>
+        <item>Generation 7</item>
+        <item>Generation 8</item>
+    </string-array>
+</resources>
