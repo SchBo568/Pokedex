@@ -24,12 +24,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private ArrayAdapter<String> adapter;
     private ArrayList<String> pokemonList = new ArrayList<>();
 
-    private Spinner generationSpinner = findViewById(R.id.generationSpinner);
+    private Spinner generationSpinner;
 
     private boolean checkApi = true;
 
     //This needs to run under a second thread to avoid the network on main error
-    private Thread secondThread = new Thread(() -> {
+    private final Thread secondThread = new Thread(() -> {
         while(true){
             if(checkApi){
                 String generation = generationSpinner.getSelectedItem().toString();
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        generationSpinner = findViewById(R.id.generationSpinner);
         secondThread.start();
 
         //Handler makes the programm wait for 2 seconds until filling list with api values

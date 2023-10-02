@@ -16,13 +16,14 @@ public class Api {
 
     private void loadPokemons(String generation){
         try {
-            int generationNumber = 2;
+            int generationNumber = 1;
             if(!generation.equals("All generations")){
                 String[] split = generation.split(" ");
                 generationNumber = Integer.parseInt(split[1]) + 1;
             }
 
-            //Pokedex: 1= full dex, from 2 onward, different gens
+            //Pokedex:
+            //TODO: Change the list from a generations list to a gameslist
             URL url = new URL("https://pokeapi.co/api/v2/pokedex/" + generationNumber);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = httpURLConnection.getInputStream();
