@@ -5,10 +5,12 @@ plugins {
 android {
     namespace 'com.example.pokedex'
     compileSdk 33
-
     packagingOptions {
-        pickFirst 'META-INF/DEPENDENCIES'
+        resources {
+            pickFirsts += ['META-INF/DEPENDENCIES']
+        }
     }
+
 
     defaultConfig {
         applicationId "com.example.pokedex"

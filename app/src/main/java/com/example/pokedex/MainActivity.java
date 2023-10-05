@@ -34,6 +34,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             if(checkApi){
                 String generation = generationSpinner.getSelectedItem().toString();
                 api.loadPokemons(generation);
+                api.getPokemonDetails("charmander");
+                //api.getPokemonAbility("https://pokeapi.co/api/v2/ability/66");
+                //System.out.println();
                 checkApi = false;
             }
         }
@@ -81,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //secondThread.suspend();
         }, 3000);
         handleSearchForPokemon();
+
     }
 
     @Override
