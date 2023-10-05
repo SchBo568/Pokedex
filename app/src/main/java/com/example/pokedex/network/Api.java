@@ -14,7 +14,7 @@ public class Api {
     ObjectMapper objectMapper = new ObjectMapper();
     ArrayList<Pokemon> pokemonList = new ArrayList<>();
 
-    private void loadPokemons(String generation){
+    public void loadPokemons(String generation){
         try {
             int generationNumber = 1;
             if(!generation.equals("All generations")){
@@ -41,8 +41,7 @@ public class Api {
         }
     }
 
-    public Api(String generation) {
-        loadPokemons(generation);
+    public Api() {
     }
 
     public ArrayList<String> getPokemonNames() {

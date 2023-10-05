@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private ListView listView;
-    private Api api;
+    private Api api = new Api();
     private ArrayAdapter<String> adapter;
     private ArrayList<String> pokemonList = new ArrayList<>();
 
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         while(true){
             if(checkApi){
                 String generation = generationSpinner.getSelectedItem().toString();
-                api = new Api(generation);
+                api.loadPokemons(generation);
                 checkApi = false;
             }
         }
