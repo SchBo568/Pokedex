@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="generation_array">$
-        <item>All generations</item>
-        <item>Generation 1</item>
-        <item>Generation 2</item>
-        <item>Generation 3</item>
-        <item>Generation 4</item>
-        <item>Generation 5</item>
-        <item>Generation 6</item>
-        <item>Generation 7</item>
-        <item>Generation 8</item>
+        <item>Nationaldex</item>
+        <item>Kanto (Red, Green, Yellow)</item>
+        <item>Johto (Gold, Silver, Crystal)</item>
+        <item>Hoenn (Ruby, Sapphire, Emerald)</item>
+        <item>Sinnoh (Diamond and Pearl)</item>
+        <item>Extended Sinnoh (Platinum)</item>
+        <item>Updated Johto (Heartgold, Soulsilver)</item>
+        <item>Unova (Black, White)</item>
+        <item>Updated Unova (Black 2, White 2)</item>
+        <item>Kalos Central (X,Y)</item>
+        <item>Kalos Coastal (X,Y)</item>
+        <item>Kalos Mountain (X,Y)</item>
+        <item>Updated Hoenn (Omega Ruby, Alpha Sapphire)</item>
+        <item>Alola (Sun, Moon)</item>
+        <item>Melemele (Sun, Moon)</item>
+        <item>Akala (Sun, Moon)</item>
+        <item>Ulaula (Sun, Moon)</item>
+        <item>Poni (Sun, Moon)</item>
+        <item>Updated Alola (Ultra Sun, Ultra Moon)</item>
+        <!--<item>Updated Melemele (Ultra Sun, Ultra Moon)</item>
+        <item>Updated Akala (Ultra Sun, Ultra Moon)</item>
+        <item>Updated Ulaula (Ultra Sun, Ultra Moon)</item> -->
+        <item>Updated Poni (Ultra Sun, Ultra Moon)</item>
+        <item>Galar (Sword, Shield)</item>
+        <item>Hisui (Legends Arceus)</item>
+        <item>Paldea (Scarlet, Violet)</item>
+
     </string-array>
 </resources>

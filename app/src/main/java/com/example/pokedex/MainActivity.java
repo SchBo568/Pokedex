@@ -33,10 +33,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         while(true){
             if(checkApi){
                 String generation = generationSpinner.getSelectedItem().toString();
-                api.loadPokemons(generation);
-                api.getPokemonDetails("charmander");
-                //api.getPokemonAbility("https://pokeapi.co/api/v2/ability/66");
-                //System.out.println();
+                System.out.println(generation);
+                pokemonList = api.loadPokemons(generation);
                 checkApi = false;
             }
         }
@@ -73,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         generationSpinner = findViewById(R.id.generationSpinner);
         secondThread.start();
 
-        //Handler makes the programm wait for 2 seconds until filling list with api values
+        //Handler makes the program wait for 2 seconds until filling list with api values
         new Handler().postDelayed(() -> {
             listView = findViewById(R.id.pokemonList);
             pokemonList = api.getPokemonNames();
@@ -93,10 +91,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         new Handler().postDelayed(() -> {
             pokemonList = api.getPokemonNames();
-            adapter.clear();
+            System.out.println(pokemonList.size());
             adapter.addAll(pokemonList);
             handleSearchForPokemon();
-        }, 3000);
+        }, 5000);
 
     }
 
