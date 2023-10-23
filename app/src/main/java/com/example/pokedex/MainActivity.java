@@ -2,6 +2,7 @@ package com.example.pokedex;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -12,33 +13,64 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.example.pokedex.model.Pokemon;
 import com.example.pokedex.network.Api;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private ListView listView;
+    public static ProgressBar waitBar;
     private Api api = new Api();
     private ArrayAdapter<String> adapter;
     private ArrayList<String> pokemonList = new ArrayList<>();
 
     private Spinner generationSpinner;
+    private Pokemon currentPokemon;
+    private String currentPokemonName;
 
     private boolean checkApi = true;
+    private boolean loadCurrentPokemon = false;
 
     //This needs to run under a second thread to avoid the network on main error
     private final Thread secondThread = new Thread(() -> {
         while(true){
             if(checkApi){
                 String generation = generationSpinner.getSelectedItem().toString();
-                System.out.println(generation);
                 pokemonList = api.loadPokemons(generation);
                 checkApi = false;
+                if(loadCurrentPokemon){
+                    currentPokemon = api.getPokemonDetails(currentPokemonName);
+                }
             }
         }
     });
+
+    public void selectPokemon(){
+        ListView listView1 = findViewById(R.id.pokemonList);
+        listView1.setOnItemClickListener((adapterView, view, i, l) -> {
+            String s = listView1.getItemAtPosition(i).toString();
+            currentPokemonName = s;
+            loadCurrentPokemon = true;
+            checkApi = true;
+            waitBar = findViewById(R.id.waitBar);
+            waitBar.setVisibility(View.VISIBLE);
+            new Handler().postDelayed(() -> {
+                System.out.println(currentPokemon);
+                Intent intent = new Intent(getApplicationContext(), PokemonActivity.class);
+                intent.putExtra("pokemon", currentPokemon);
+                intent.putExtra("name", currentPokemonName);
+
+                startActivity(intent);
+            }, 3000);
+
+        });
+
+    }
 
     public void handleSearchForPokemon(){
         EditText searchTextField = findViewById(R.id.searchText);
@@ -71,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         generationSpinner = findViewById(R.id.generationSpinner);
         secondThread.start();
 
+
         //Handler makes the program wait for 2 seconds until filling list with api values
         new Handler().postDelayed(() -> {
             listView = findViewById(R.id.pokemonList);
@@ -82,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //secondThread.suspend();
         }, 3000);
         handleSearchForPokemon();
-
+        selectPokemon();
     }
 
     @Override
@@ -91,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         new Handler().postDelayed(() -> {
             pokemonList = api.getPokemonNames();
-            System.out.println(pokemonList.size());
             adapter.addAll(pokemonList);
             handleSearchForPokemon();
         }, 5000);

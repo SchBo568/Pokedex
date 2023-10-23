@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.example.pokedex.model.Ability;
 import com.example.pokedex.model.Pokemon;
@@ -16,18 +18,23 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Api {
-    public static final int NATIONAL_DEX = 1;
-    public static final int KANTO = 2;
-    public static final int JOHTO = 3;
-    public static final int HOENN = 4;
-    public static final int SINNOH = 5;
-    public static final int EXTENDED_SINNOH = 6;
-    public static final int UPDATED_JOHTO = 7;
-    public static final int UNOVA = 8;
-    public static final int UPDATED_UNOVA = 9;
 
     private ObjectMapper objectMapper = new ObjectMapper();
     private ArrayList<String> pokemonList = new ArrayList<>();
+
+    private Map<String, Integer> lookup = new HashMap<String, Integer>();
+
+    public Api() {
+        lookup.put("kanto", 1);
+        lookup.put("johto", 2);
+        lookup.put("hoenn", 3);
+        lookup.put("sinnoh", 4);
+        lookup.put("unova", 5);
+        lookup.put("kalos", 6);
+        lookup.put("alola", 7);
+        lookup.put("galar", 8);
+        lookup.put("paldea", 9);
+    }
 
     public ArrayList<String> loadPokemons(String generation){
         ArrayList<String> result = new ArrayList<>();
@@ -35,21 +42,20 @@ public class Api {
             int generationNumber = 1;
             if(!generation.equals("All generations")){
                 String[] split = generation.split(" ");
-                generationNumber = Integer.parseInt(split[1]) + 1;
+                generationNumber = lookup.get(split[0].toLowerCase());
             }
 
             //Pokedex:
-            //TODO: Change the list from a generations list to a regionlist
-            URL url = new URL("https://pokeapi.co/api/v2/pokedex/" + generationNumber);
+            URL url = new URL("https://pokeapi.co/api/v2/generation/" + generationNumber);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = httpURLConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             String jsonString = bufferedReader.readLine();
             JsonNode jsonNode = objectMapper.readTree(jsonString);
-            JsonNode pokemons = jsonNode.get("pokemon_entries");
+            JsonNode pokemons = jsonNode.get("pokemon_species");
             pokemonList.clear();
             for(JsonNode pokemon : pokemons) {
-                String pokemonName = pokemon.get("pokemon_species").get("name").asText();
+                String pokemonName = pokemon.get("name").asText();
                 pokemonList.add(pokemonName);
                 //pokemonList.add(getPokemonDetails(pokemonName));
             }
@@ -62,8 +68,7 @@ public class Api {
         return result;
     }
 
-    public Api() {
-    }
+
 
     public ArrayList<String> getPokemonNames() {
         return pokemonList;
@@ -98,13 +103,19 @@ public class Api {
                 abilities.add(getPokemonAbility(ability.get("ability").get("url").asText()));
             }
 
+            int weight = jsonNode.get("weight").asInt();
+            int height = jsonNode.get("height").asInt();
+
+            String imageUrl = jsonNode.get("sprites").get("front_default").asText();
+
             /*ArrayList<Type> types = new ArrayList<>();
             for(JsonNode type : jsonNode.get("types")){
                 Type actualType = new Type(type.get("type").get("name").asText());
                 types.add(actualType);
             }
             */
-            pokemon = new Pokemon(jsonNode.get("name").asText());
+            //pokemon = new Pokemon(jsonNode.get("name").asText());
+            pokemon = new Pokemon(name, abilities, weight, height, imageUrl);
             httpURLConnection.disconnect();
         }
         catch (Exception e){
@@ -123,14 +134,12 @@ public class Api {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             String jsonString = bufferedReader.readLine();
             JsonNode jsonNode = objectMapper.readTree(jsonString);
-            //System.out.println(jsonNode.asText());
             String name = String.valueOf(jsonNode.get("name"));
             String description = String.valueOf(jsonNode.get("flavor_text_entries").get(1).get("flavor_text"));
             String shortEffect = String.valueOf(jsonNode.get("effect_entries").get(1).get("short_effect"));
             String effect = String.valueOf(jsonNode.get("effect_entries").get(1).get("effect"));
 
             result = new Ability(name, description, shortEffect, effect);
-            System.out.println(result);
             //JsonNode[] names = new JsonNode[]{jsonNode.get("names")};
             httpURLConnection.disconnect();
 

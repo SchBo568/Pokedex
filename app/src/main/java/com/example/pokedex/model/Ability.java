@@ -1,6 +1,8 @@
 package com.example.pokedex.model;
 
-public class Ability {
+import java.io.Serializable;
+
+public class Ability implements Serializable {
     private String name, description, shortEffect, effect;
 
     public Ability(String name, String description, String shortEffect, String effect) {
