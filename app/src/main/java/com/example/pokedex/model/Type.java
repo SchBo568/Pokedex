@@ -11,14 +11,16 @@ import java.net.URL;
 
 public class Type {
     private ObjectMapper objectMapper = new ObjectMapper();
-    private int id, tm;
+    private int id;
     private String name;
-    private Type[] double_damage_from, double_damage_to, half_damage_from, half_damage_to, no_damage_from_no_damage_to;
+
+    private String move_damage_class;
+    //private Type[] double_damage_from, double_damage_to, half_damage_from, half_damage_to, no_damage_from_no_damage_to;
 
     public Type(String name) {
         this.name = name;
 
-        /*try{
+        try{
             URL url = new URL("https://pokeapi.co/api/v2/type/" + name);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = httpURLConnection.getInputStream();
@@ -28,13 +30,15 @@ public class Type {
 
             System.out.println(jsonNode);
 
-            for(JsonNode a : jsonNode.get("damage_relations").get("double_damage_from")){
+            String pMoveClass = jsonNode.get("move_damage_class").get("name").asText();
+            int pId = jsonNode.get("id").asInt();
 
-            }
+            this.id = pId;
+            this.move_damage_class = pMoveClass;
         }
         catch(Exception e){
             System.out.println("You fucked up");
-        }*/
+        }
 
     }
 
@@ -46,23 +50,4 @@ public class Type {
         return name;
     }
 
-    public Type[] getDouble_damage_from() {
-        return double_damage_from;
-    }
-
-    public Type[] getDouble_damage_to() {
-        return double_damage_to;
-    }
-
-    public Type[] getHalf_damage_from() {
-        return half_damage_from;
-    }
-
-    public Type[] getHalf_damage_to() {
-        return half_damage_to;
-    }
-
-    public Type[] getNo_damage_from_no_damage_to() {
-        return no_damage_from_no_damage_to;
-    }
 }

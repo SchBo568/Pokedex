@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.pokedex.model.Pokemon;
 import com.example.pokedex.network.Api;
@@ -40,11 +39,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private final Thread secondThread = new Thread(() -> {
         while(true){
             if(checkApi){
-                String generation = generationSpinner.getSelectedItem().toString();
-                pokemonList = api.loadPokemons(generation);
+                pokemonList = api.loadPokemons(generationSpinner.getSelectedItem().toString());
                 checkApi = false;
                 if(loadCurrentPokemon){
-                    currentPokemon = api.getPokemonDetails(currentPokemonName);
+                    currentPokemon = new Pokemon(currentPokemonName);
                 }
             }
         }
@@ -60,14 +58,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             waitBar = findViewById(R.id.waitBar);
             waitBar.setVisibility(View.VISIBLE);
             new Handler().postDelayed(() -> {
-                System.out.println(currentPokemon);
                 Intent intent = new Intent(getApplicationContext(), PokemonActivity.class);
-                intent.putExtra("pokemon", currentPokemon);
+                //intent.putExtra("pokemon", currentPokemon);
                 intent.putExtra("name", currentPokemonName);
 
                 startActivity(intent);
-            }, 3000);
 
+            }, 3000);
         });
 
     }
@@ -82,11 +79,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
                 String searchText = charSequence.toString();
                 pokemonList = api.searchName(searchText);
                 adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, pokemonList);
-                listView.setAdapter(adapter);
-                runOnUiThread(() -> adapter.notifyDataSetChanged());
+                if(adapter != null && pokemonList != null){
+                    listView.setAdapter(adapter);
+                    runOnUiThread(() -> adapter.notifyDataSetChanged());
+                }
+
             }
 
             @Override
@@ -102,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         generationSpinner = findViewById(R.id.generationSpinner);
         secondThread.start();
-
 
         //Handler makes the program wait for 2 seconds until filling list with api values
         new Handler().postDelayed(() -> {
