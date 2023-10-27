@@ -28,8 +28,6 @@ public class Type {
             String jsonString = bufferedReader.readLine();
             JsonNode jsonNode = objectMapper.readTree(jsonString);
 
-            System.out.println(jsonNode);
-
             String pMoveClass = jsonNode.get("move_damage_class").get("name").asText();
             int pId = jsonNode.get("id").asInt();
 

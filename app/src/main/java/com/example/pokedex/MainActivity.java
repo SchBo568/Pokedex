@@ -57,14 +57,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             checkApi = true;
             waitBar = findViewById(R.id.waitBar);
             waitBar.setVisibility(View.VISIBLE);
-            new Handler().postDelayed(() -> {
-                Intent intent = new Intent(getApplicationContext(), PokemonActivity.class);
-                //intent.putExtra("pokemon", currentPokemon);
-                intent.putExtra("name", currentPokemonName);
 
-                startActivity(intent);
+            Intent intent = new Intent(getApplicationContext(), PokemonActivity.class);
+            //intent.putExtra("pokemon", currentPokemon);
+            intent.putExtra("name", currentPokemonName);
 
-            }, 3000);
+            startActivity(intent);
+
+
         });
 
     }

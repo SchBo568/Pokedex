@@ -21,10 +21,12 @@
 
     <ListView
         android:id="@+id/pokemonList"
-        android:layout_width="409dp"
-        android:layout_height="504dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="102dp" />
+        android:layout_width="408dp"
+        android:layout_height="564dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintTop_toBottomOf="@+id/generationSpinner"
+        tools:layout_editor_absoluteX="1dp" />
 
     <EditText
         android:id="@+id/searchText"
@@ -33,20 +35,23 @@
         android:ems="10"
         android:hint="Search for a pokemon"
         android:inputType="text"
-        tools:layout_editor_absoluteX="101dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="409dp"
-        android:layout_height="59dp"
-        android:layout_marginBottom="24dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="1dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/pokemonButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="Button" />
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
@@ -54,9 +59,10 @@
         android:id="@+id/generationSpinner"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
         android:entries="@array/generation_array"
         android:spinnerMode="dropdown"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="58dp" />
+        app:layout_constraintTop_toBottomOf="@+id/searchText"
+        tools:layout_editor_absoluteX="1dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

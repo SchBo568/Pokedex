@@ -22,10 +22,8 @@ public class Move {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     public Move(String name) {
-        Log.d("callingMove", "Calling search for move");
         try{
             URL url = new URL("https://pokeapi.co/api/v2/move/" + name);
-            Log.d("findMove", url.toString());
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = httpURLConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));

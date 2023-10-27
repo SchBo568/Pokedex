@@ -1,5 +1,7 @@
 package com.example.pokedex.model;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -22,6 +24,7 @@ public class Pokemon implements Serializable {
     private ArrayList<Type> types;
     private int weight, height;
     private String imageURL;
+
 
     public Pokemon(String name) {
         this.name = name;
@@ -69,8 +72,10 @@ public class Pokemon implements Serializable {
     }
 
     public ArrayList<String> getMoves(){
+
         ArrayList<String> temp = new ArrayList<>();
         for(Move move: moves){
+            Log.d("moves", move.getName());
             temp.add(move.getName());
         }
         return temp;
