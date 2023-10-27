@@ -32,17 +32,15 @@ public class PokemonActivity extends AppCompatActivity {
         while(true){
             if(checkApi){
                 currentPokemon = new Pokemon(name);
-                checkApi = false;
-            }
-            if(currentPokemon != null){
-                if(currentPokemon.getMoves().size() >0){
-
-                    isLoaded = true;
+                if(currentPokemon != null){
+                    if(currentPokemon.getMoves().size() == currentPokemon.amountOfMoves){
+                        checkApi = false;
+                        isLoaded = true;
+                    }
                 }
             }
 
         }
-
     }
     );
 
@@ -50,44 +48,34 @@ public class PokemonActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MainActivity.waitBar.setVisibility(View.INVISIBLE);
+        setContentView(R.layout.activity_pokemon);
 
         name = getIntent().getStringExtra("name");
+        secondThread.start();
         checkApi = true;
-        try {
-            secondThread.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+
+        //TODO: DONT DO THAT
+        while(true){
+            if(isLoaded){
+                TextView pokemonNameView = findViewById(R.id.pokemonName);
+                pokemonNameView.setText(name);
+
+                ImageView pokemonImage = findViewById(R.id.pokemonImage);
+                Picasso.get().load(currentPokemon.getImageURL()).into(pokemonImage);
+
+                Button backButton = (Button) findViewById(R.id.backButton);
+                backButton.setOnClickListener(view -> {
+                    this.finish();
+                });
+
+                ListView movesList = findViewById(R.id.movesList);
+                ArrayAdapter adapter = new ArrayAdapter<>(PokemonActivity.this, android.R.layout.simple_list_item_1, currentPokemon.getMoves());
+                movesList.setAdapter(adapter);
+                runOnUiThread(() -> adapter.notifyDataSetChanged());
+
+                break;
+            }
         }
-
-        setContentView(R.layout.activity_pokemon);
-        while(!isLoaded){
-        }
-
-
-
-
-        TextView pokemonNameView = findViewById(R.id.pokemonName);
-        pokemonNameView.setText(name);
-
-        ImageView pokemonImage = findViewById(R.id.pokemonImage);
-        Picasso.get().load(currentPokemon.getImageURL()).into(pokemonImage);
-
-        Button backButton = (Button) findViewById(R.id.backButton);
-        backButton.setOnClickListener(view -> {
-            this.finish();
-        });
-
-        ListView movesList = findViewById(R.id.movesList);
-        ArrayAdapter adapter = new ArrayAdapter<>(PokemonActivity.this, android.R.layout.simple_list_item_1, currentPokemon.getMoves());
-        movesList.setAdapter(adapter);
-        runOnUiThread(() -> adapter.notifyDataSetChanged());
-
-        /*new Handler().postDelayed(() -> {
-
-
-        }, 10000);*/
-
-
     }
 
     //TODO: Check API to get all information concerning this pokemon and put items slowly on the activity

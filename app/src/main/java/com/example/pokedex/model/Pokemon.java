@@ -20,10 +20,12 @@ public class Pokemon implements Serializable {
     private ObjectMapper objectMapper = new ObjectMapper();
     private ArrayList<String> held_items, stats;
     private ArrayList<Move> moves;
+    private ArrayList<String> sMoves;
     private ArrayList<Ability> abilities;
     private ArrayList<Type> types;
     private int weight, height;
     private String imageURL;
+    public int amountOfMoves;
 
 
     public Pokemon(String name) {
@@ -50,15 +52,22 @@ public class Pokemon implements Serializable {
 
             ArrayList<Type> types = new ArrayList<>();
             for(JsonNode type : jsonNode.get("types")){
+
                 Type actualType = new Type(type.get("type").get("name").asText());
                 types.add(actualType);
             }
 
-            ArrayList<Move> moves = new ArrayList<>();
+            /*ArrayList<Move> moves = new ArrayList<>();
             for(JsonNode move : jsonNode.get("moves")){
                 moves.add(new Move(move.get("move").get("name").asText()));
+            }*/
+
+            ArrayList<String> moves = new ArrayList<>();
+            amountOfMoves = jsonNode.get("moves").size();
+            for(JsonNode move : jsonNode.get("moves")){
+                moves.add(move.get("move").get("name").asText());
             }
-            this.moves = moves;
+            this.sMoves = moves;
             this.types = types;
             httpURLConnection.disconnect();
         }
@@ -73,12 +82,14 @@ public class Pokemon implements Serializable {
 
     public ArrayList<String> getMoves(){
 
-        ArrayList<String> temp = new ArrayList<>();
+        /*ArrayList<String> temp = new ArrayList<>();
         for(Move move: moves){
             Log.d("moves", move.getName());
             temp.add(move.getName());
         }
-        return temp;
+        return temp;*/
+
+        return sMoves;
     }
 
     public ArrayList<String> getHeld_items() {
