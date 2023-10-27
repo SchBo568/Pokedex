@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="generation_array">
-        <item>Kanto (Red, Green, Yellow)</item>
+        <item>Kanto (Red, Blue)</item>
         <item>Johto (Gold, Silver, Crystal)</item>
         <item>Hoenn (Ruby, Sapphire, Emerald)</item>
         <item>Sinnoh (Diamond and Pearl)</item>
