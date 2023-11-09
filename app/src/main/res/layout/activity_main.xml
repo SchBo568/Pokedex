@@ -21,8 +21,8 @@
 
     <ListView
         android:id="@+id/pokemonList"
-        android:layout_width="408dp"
-        android:layout_height="564dp"
+        android:layout_width="412dp"
+        android:layout_height="485dp"
         android:layout_marginTop="5dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintTop_toBottomOf="@+id/generationSpinner"
@@ -59,10 +59,10 @@
         android:id="@+id/generationSpinner"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="16dp"
         android:entries="@array/generation_array"
         android:spinnerMode="dropdown"
         app:layout_constraintTop_toBottomOf="@+id/searchText"
-        tools:layout_editor_absoluteX="1dp" />
+        tools:layout_editor_absoluteX="4dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
