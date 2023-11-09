@@ -85,6 +85,10 @@ public class Move {
         return name;
     }
 
+    public String getDetails(){
+        return name + ";" + "Type: " + type + " - PP: " + pp + " - Power: " + power + " - Accuracy: " + accuracy;
+    }
+
     @Override
     public String toString() {
         return "Move{" +

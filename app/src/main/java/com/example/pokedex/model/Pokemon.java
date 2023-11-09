@@ -29,7 +29,7 @@ public class Pokemon implements Serializable {
 
 
     public Pokemon(String name) {
-        this.name = name;
+        this.name = name;/*name.substring(0,1).toUpperCase() + name.substring(1);*/
         try{
             URL url = new URL("https://pokeapi.co/api/v2/pokemon/" + name);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -52,9 +52,12 @@ public class Pokemon implements Serializable {
 
             ArrayList<Type> types = new ArrayList<>();
             for(JsonNode type : jsonNode.get("types")){
-
                 Type actualType = new Type(type.get("type").get("name").asText());
                 types.add(actualType);
+            }
+
+            if(types.size() ==1){
+                types.add(new Type("none"));
             }
 
             /*ArrayList<Move> moves = new ArrayList<>();
@@ -65,7 +68,10 @@ public class Pokemon implements Serializable {
             ArrayList<String> moves = new ArrayList<>();
             amountOfMoves = jsonNode.get("moves").size();
             for(JsonNode move : jsonNode.get("moves")){
-                moves.add(move.get("move").get("name").asText());
+                String tempMove = move.get("move").get("name").asText();
+                tempMove = tempMove.replace("-", " ");
+                tempMove = tempMove.substring(0,1).toUpperCase() + tempMove.substring(1);
+                moves.add(tempMove);
             }
             this.sMoves = moves;
             this.types = types;
@@ -80,7 +86,7 @@ public class Pokemon implements Serializable {
         return name;
     }
 
-    public ArrayList<String> getMoves(){
+    public ArrayList<String> getSMoves(){
 
         /*ArrayList<String> temp = new ArrayList<>();
         for(Move move: moves){
@@ -91,6 +97,8 @@ public class Pokemon implements Serializable {
 
         return sMoves;
     }
+
+
 
     public ArrayList<String> getHeld_items() {
         return held_items;
@@ -124,5 +132,13 @@ public class Pokemon implements Serializable {
     @Override
     public String toString() {
         return name + " - " + imageURL + " - " + weight + " - " + height;
+    }
+
+    public String movesToString(){
+        String result = "";
+        for(String move : getSMoves()){
+            result = result + move + "\n";
+        }
+        return result;
     }
 }

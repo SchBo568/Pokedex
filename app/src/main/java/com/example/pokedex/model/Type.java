@@ -1,5 +1,7 @@
 package com.example.pokedex.model;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -19,24 +21,28 @@ public class Type {
 
     public Type(String name) {
         this.name = name;
+        if(name != "none"){
+            try{
+                URL url = new URL("https://pokeapi.co/api/v2/type/" + name);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String jsonString = bufferedReader.readLine();
+                JsonNode jsonNode = objectMapper.readTree(jsonString);
 
-        try{
-            URL url = new URL("https://pokeapi.co/api/v2/type/" + name);
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            InputStream inputStream = httpURLConnection.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            String jsonString = bufferedReader.readLine();
-            JsonNode jsonNode = objectMapper.readTree(jsonString);
+                String pMoveClass = jsonNode.get("move_damage_class").get("name").asText();
+                int pId = jsonNode.get("id").asInt();
 
-            String pMoveClass = jsonNode.get("move_damage_class").get("name").asText();
-            int pId = jsonNode.get("id").asInt();
-
-            this.id = pId;
-            this.move_damage_class = pMoveClass;
+                this.id = pId;
+                this.move_damage_class = pMoveClass;
+            }
+            catch(Exception e){
+                System.out.println(e);
+                Log.d("fucked", name);
+                System.out.println("You fucked up");
+            }
         }
-        catch(Exception e){
-            System.out.println("You fucked up");
-        }
+
 
     }
 

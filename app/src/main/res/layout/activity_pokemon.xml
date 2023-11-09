@@ -27,17 +27,48 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/pokemonButton"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Button" />
+            android:layout_gravity="center"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:textAlignment="center">
+
+            <Button
+                android:id="@+id/pokemonButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="5dp"
+                android:text="Main" />
+
+            <Button
+                android:id="@+id/button11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:text="Search" />
+
+            <Button
+                android:id="@+id/button13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:text="Profile"
+                android:layout_marginEnd="5dp" />
+        </LinearLayout>
+
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <ImageView
         android:id="@+id/pokemonImage"
-        android:layout_width="244dp"
-        android:layout_height="214dp"
+        android:layout_width="203dp"
+        android:layout_height="174dp"
+        android:cropToPadding="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pokemonName"
@@ -52,11 +83,72 @@
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="1dp" />
 
-    <ListView
-        android:id="@+id/movesList"
-        android:layout_width="414dp"
-        android:layout_height="364dp"
-        android:layout_marginBottom="24dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recylcerView1"
+        android:layout_width="194dp"
+        android:layout_height="136dp"
+        android:layout_marginBottom="36dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/movesListTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="160dp"
+        android:text="Moves List"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="@+id/recylcerView1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/type1"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="8dp"
+        android:text="Type1"
+        android:textSize="34sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pokemonImage" />
+
+    <Button
+        android:id="@+id/type2"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="5dp"
+        android:text="Type2"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pokemonImage" />
+
+    <TextView
+        android:id="@+id/weight"
+        android:layout_width="87dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="4dp"
+        android:text="0kg"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/type1" />
+
+    <TextView
+        android:id="@+id/height"
+        android:layout_width="87dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="96dp"
+        android:text="0m"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/type2" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
