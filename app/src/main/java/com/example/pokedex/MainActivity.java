@@ -1,6 +1,8 @@
 package com.example.pokedex;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,8 +21,13 @@ import android.widget.Spinner;
 
 import com.example.pokedex.model.Pokemon;
 import com.example.pokedex.network.Api;
+import com.example.pokedex.roomDB.AppDatabase;
+import com.example.pokedex.roomDB.PokemonDB;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private ListView listView;
@@ -38,7 +46,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //This needs to run under a second thread to avoid the network on main error
     private final Thread secondThread = new Thread(() -> {
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "database-name").build();
 
+        List<PokemonDB> internalDB = db.pokemonDao().getAll();
+
+        //TODO: Implement a random Pokemon Catcher with code below
+        //db.pokemonDao().insert(new PokemonDB("charmander"));
+
+        for(PokemonDB pokemonDB : internalDB){
+            System.out.println(pokemonDB.pokemonCaught);
+        }
         while(true){
             if(checkApi){
                 pokemonList = api.loadPokemons(generationSpinner.getSelectedItem().toString());
@@ -107,6 +125,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         generationSpinner = findViewById(R.id.generationSpinner);
         secondThread.start();
+        BottomNavigationView bvn = findViewById(R.id.bottom_navigation);
+
+        bvn.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int menuItemId =  item.getItemId();
+
+                if(menuItemId == R.id.home){
+                    return true;
+                }
+                else if(menuItemId == R.id.search){
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                else if(menuItemId == R.id.profile){
+                    return true;
+                }
+                return true;
+            }
+        });
+
 
         //Handler makes the program wait for 2 seconds until filling list with api values
         new Handler().postDelayed(() -> {
