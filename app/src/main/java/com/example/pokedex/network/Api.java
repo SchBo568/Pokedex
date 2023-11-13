@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import com.example.pokedex.model.Ability;
 import com.example.pokedex.model.Pokemon;
@@ -34,6 +35,26 @@ public class Api {
         lookup.put("alola", 7);
         lookup.put("galar", 8);
         lookup.put("paldea", 9);
+    }
+
+    public Pokemon getRandomPokemon(){
+        Random random = new Random();
+
+        // Generate a random number between 0 and 1016 (inclusive)
+        int randomNumber = random.nextInt(1017);
+        try{
+            URL url = new URL("https://pokeapi.co/api/v2/pokemon/" + randomNumber);
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            InputStream inputStream = httpURLConnection.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String jsonString = bufferedReader.readLine();
+            JsonNode jsonNode = objectMapper.readTree(jsonString);
+        }
+        catch(Exception e){
+            System.out.println("lol");
+        }
+
+        return null;
     }
 
     public ArrayList<String> loadPokemons(String generation){
