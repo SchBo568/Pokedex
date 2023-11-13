@@ -8,10 +8,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class Type {
+public class Type implements Serializable {
     private ObjectMapper objectMapper = new ObjectMapper();
     private int id;
     private String name;

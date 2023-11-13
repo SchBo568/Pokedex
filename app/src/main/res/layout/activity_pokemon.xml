@@ -105,33 +105,11 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/type1"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="8dp"
-        android:text="Type1"
-        android:textSize="34sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pokemonImage" />
-
-    <Button
-        android:id="@+id/type2"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="5dp"
-        android:text="Type2"
-        android:textSize="34sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pokemonImage" />
-
     <TextView
         android:id="@+id/weight"
         android:layout_width="87dp"
         android:layout_height="30dp"
-        android:layout_marginStart="68dp"
+        android:layout_marginStart="88dp"
         android:layout_marginTop="4dp"
         android:text="0kg"
         android:textAlignment="center"
@@ -144,11 +122,31 @@
         android:layout_width="87dp"
         android:layout_height="30dp"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="96dp"
+        android:layout_marginEnd="80dp"
         android:text="0m"
         android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/type2" />
+
+    <ImageView
+        android:id="@+id/type1"
+        android:layout_width="87dp"
+        android:layout_height="72dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="72dp"
+        app:layout_constraintEnd_toStartOf="@+id/type2"
+        app:layout_constraintTop_toBottomOf="@+id/pokemonImage"
+        app:srcCompat="@drawable/dark" />
+
+    <ImageView
+        android:id="@+id/type2"
+        android:layout_width="87dp"
+        android:layout_height="72dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="76dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pokemonImage"
+        app:srcCompat="@drawable/dark" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

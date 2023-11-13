@@ -37,7 +37,6 @@ public class PokemonActivity extends AppCompatActivity {
     private boolean isLoaded = false;
 
     private final Thread secondThread = new Thread(() -> {
-        Thread.currentThread().setName("LOOOOOOOOOOK");
         while(true){
             if(checkApi){
                 currentPokemon = new Pokemon(name);
@@ -48,18 +47,18 @@ public class PokemonActivity extends AppCompatActivity {
                     }
                 }
             }
-
         }
-    }
-    );
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         MainActivity.waitBar.setVisibility(View.INVISIBLE);
         setContentView(R.layout.activity_pokemon);
 
         name = getIntent().getStringExtra("name");
+        Log.d("pokemon", getIntent().getSerializableExtra("pokemon").toString());
         secondThread.start();
         checkApi = true;
 
@@ -82,11 +81,13 @@ public class PokemonActivity extends AppCompatActivity {
                 String type1 = currentPokemon.getTypes().get(0).getName();
                 String type2 = currentPokemon.getTypes().get(1).getName();
 
-                Button bType1 = findViewById(R.id.type1);
-                Button bType2 = findViewById(R.id.type2);
+                ImageView iType1 = findViewById(R.id.type1);
+                iType1.setImageResource(R.drawable.electric);
 
-                bType1.setText(type1);
-                bType2.setText(type2);
+                ImageView iType2 = findViewById(R.id.type2);
+                iType2.setImageResource(R.drawable.fairy);
+
+
 
                 TextView weightTW = findViewById(R.id.weight);
                 weightTW.setText("Weight: " +currentPokemon.getWeight() + "g");

@@ -8,12 +8,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Move {
+public class Move implements Serializable {
     //If accuracy is null, then it cant miss, convert to 100
     private String name, damage_class, effect, short_effect, ailment, target, type;
     private int id, pp, priority, power,  accuracy, ailment_chance, crit_rate, drain, flinch_chance, healing, max_hits, max_turns, min_hits, min_turns, stat_chance;

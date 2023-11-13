@@ -33,10 +33,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private String currentPokemonName;
 
     private boolean checkApi = true;
+    private boolean pokemonDetails = false;
     private boolean loadCurrentPokemon = false;
 
     //This needs to run under a second thread to avoid the network on main error
     private final Thread secondThread = new Thread(() -> {
+
         while(true){
             if(checkApi){
                 pokemonList = api.loadPokemons(generationSpinner.getSelectedItem().toString());
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
         }
+
     });
 
     public void selectPokemon(){
@@ -58,12 +61,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             waitBar = findViewById(R.id.waitBar);
             waitBar.setVisibility(View.VISIBLE);
 
-            Intent intent = new Intent(getApplicationContext(), PokemonActivity.class);
-            //intent.putExtra("pokemon", currentPokemon);
-            intent.putExtra("name", currentPokemonName);
-
-            startActivity(intent);
-
+            new Handler().postDelayed(() -> {
+                Intent intent = new Intent(getApplicationContext(), PokemonActivity.class);
+                intent.putExtra("pokemon", currentPokemon);
+                intent.putExtra("name", currentPokemonName);
+                pokemonDetails = true;
+                startActivity(intent);
+            }, 5000);
 
         });
 
