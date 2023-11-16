@@ -15,9 +15,10 @@ import java.util.List;
 public class CatchRandomPokemon extends AppCompatActivity {
 
     private Api api;
+    private Pokemon currentPokemon;
     private final Thread secondThread = new Thread(() -> {
         api = new Api();
-
+        currentPokemon = api.getRandomPokemon();
     });
 
     @Override

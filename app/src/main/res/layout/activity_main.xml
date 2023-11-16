@@ -21,13 +21,18 @@
 
     <ListView
         android:id="@+id/pokemonList"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="550dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="11dp"
+        android:longClickable="true"
+        android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/generationSpinner"
-        tools:layout_editor_absoluteX="1dp" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/searchText"

@@ -60,11 +60,11 @@
         android:id="@+id/movesListTitle"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="88dp"
         android:text="Moves List"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.064"
+        app:layout_constraintHorizontal_bias="0.044"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/weight" />
 
@@ -72,7 +72,7 @@
         android:id="@+id/weight"
         android:layout_width="87dp"
         android:layout_height="30dp"
-        android:layout_marginStart="88dp"
+        android:layout_marginStart="78dp"
         android:layout_marginTop="4dp"
         android:text="0kg"
         android:textAlignment="center"
@@ -85,7 +85,7 @@
         android:layout_width="87dp"
         android:layout_height="30dp"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="80dp"
+        android:layout_marginEnd="76dp"
         android:text="0m"
         android:textAlignment="center"
         android:textSize="20sp"
@@ -96,9 +96,11 @@
         android:id="@+id/type1"
         android:layout_width="87dp"
         android:layout_height="72dp"
+        android:layout_marginStart="67dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="72dp"
         app:layout_constraintEnd_toStartOf="@+id/type2"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pokemonImage"
         app:srcCompat="@drawable/dark" />
 
@@ -111,5 +113,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pokemonImage"
         app:srcCompat="@drawable/dark" />
+
+    <Button
+        android:id="@+id/ability1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="88dp"
+        android:layout_marginTop="16dp"
+        android:text="Ability 1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weight" />
+
+    <Button
+        android:id="@+id/ability2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="88dp"
+        android:text="Ability 2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/height" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

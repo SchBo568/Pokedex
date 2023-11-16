@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             currentPokemonName = s;
             loadCurrentPokemon = true;
             checkApi = true;
-            waitBar = findViewById(R.id.waitBar);
-            waitBar.setVisibility(View.VISIBLE);
+            if(waitBar != null)
+                waitBar.setVisibility(View.VISIBLE);
 
             new Handler().postDelayed(() -> {
                 Intent intent = new Intent(getApplicationContext(), PokemonActivity.class);
@@ -166,12 +166,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         checkApi = true;
-
+        if(waitBar != null)
+            waitBar.setVisibility(View.VISIBLE);
         new Handler().postDelayed(() -> {
             pokemonList = api.getPokemonNames();
             adapter.addAll(pokemonList);
             handleSearchForPokemon();
-        }, 5000);
+            if(waitBar != null)
+                waitBar.setVisibility(View.INVISIBLE);
+        }, 3000);
 
     }
 
