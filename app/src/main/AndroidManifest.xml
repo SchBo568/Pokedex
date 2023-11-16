@@ -13,6 +13,20 @@
         android:theme="@style/Theme.Pokedex"
         tools:targetApi="31">
         <activity
+            android:name=".WelcomeScreen"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Profile"
+            android:exported="false"
+            android:label="@string/title_activity_profile"
+            android:theme="@style/Theme.Pokedex" />
+        <activity
             android:name=".CatchRandomPokemon"
             android:exported="false" />
         <activity

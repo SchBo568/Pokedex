@@ -46,17 +46,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //This needs to run under a second thread to avoid the network on main error
     private final Thread secondThread = new Thread(() -> {
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "database-name").build();
-
-        List<PokemonDB> internalDB = db.pokemonDao().getAll();
-
-        //TODO: Implement a random Pokemon Catcher with code below
-        //db.pokemonDao().insert(new PokemonDB("charmander"));
-
-        for(PokemonDB pokemonDB : internalDB){
-            System.out.println(pokemonDB.pokemonCaught);
-        }
         while(true){
             if(checkApi){
                 pokemonList = api.loadPokemons(generationSpinner.getSelectedItem().toString());
@@ -66,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
         }
-
     });
 
     public void selectPokemon(){
@@ -76,8 +64,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             currentPokemonName = s;
             loadCurrentPokemon = true;
             checkApi = true;
-            waitBar = findViewById(R.id.waitBar);
-            waitBar.setVisibility(View.VISIBLE);
+            if(waitBar != null)
+                waitBar.setVisibility(View.VISIBLE);
 
             new Handler().postDelayed(() -> {
                 Intent intent = new Intent(getApplicationContext(), PokemonActivity.class);
@@ -125,14 +113,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         generationSpinner = findViewById(R.id.generationSpinner);
         secondThread.start();
-        BottomNavigationView bvn = findViewById(R.id.bottom_navigation);
 
-        bvn.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int menuItemId =  item.getItemId();
 
                 if(menuItemId == R.id.home){
+                    Intent intent = new Intent(getApplicationContext(), CatchRandomPokemon.class);
+                    startActivity(intent);
                     return true;
                 }
                 else if(menuItemId == R.id.search){
@@ -142,6 +133,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     return true;
                 }
                 else if(menuItemId == R.id.profile){
+
+                    Intent intent = new Intent(getApplicationContext(), Profile.class);
+                    startActivity(intent);
                     return true;
                 }
                 return true;
@@ -157,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             listView.setAdapter(adapter);
             runOnUiThread(() -> adapter.notifyDataSetChanged());
             generationSpinner.setOnItemSelectedListener(this);
-            //secondThread.suspend();
         }, 3000);
         handleSearchForPokemon();
         selectPokemon();
@@ -166,12 +159,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         checkApi = true;
-
+        if(waitBar != null)
+            waitBar.setVisibility(View.VISIBLE);
         new Handler().postDelayed(() -> {
             pokemonList = api.getPokemonNames();
             adapter.addAll(pokemonList);
             handleSearchForPokemon();
-        }, 5000);
+            if(waitBar != null)
+                waitBar.setVisibility(View.INVISIBLE);
+        }, 3000);
 
     }
 

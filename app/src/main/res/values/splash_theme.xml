@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Splash Screen Theme. -->
+    <style name="Theme.AppSplash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/dark</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/none</item>
+        <item name="windowSplashScreenAnimationDuration">300</item>
+
+        <!-- Status bar and Nav bar configs -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/dark</item>
+        <item name="android:navigationBarColor">@color/dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <color name="dark">#000000</color>
+</resources>

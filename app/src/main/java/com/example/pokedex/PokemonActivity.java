@@ -2,28 +2,19 @@ package com.example.pokedex;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.pokedex.helperClasses.CardAdapter;
-import com.example.pokedex.model.Move;
+import com.example.pokedex.model.Ability;
 import com.example.pokedex.model.Pokemon;
 import com.example.pokedex.network.Api;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -43,7 +34,7 @@ public class PokemonActivity extends AppCompatActivity {
     private HashMap<String, Integer> typesImages = new HashMap<String, Integer>();
 
 
-    private void fillHM(){
+    private void fillHashMap(){
         typesImages.put("normal", R.drawable.normal);
         typesImages.put("fire", R.drawable.fire);
         typesImages.put("water", R.drawable.water);
@@ -68,21 +59,23 @@ public class PokemonActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fillHM();
-        MainActivity.waitBar.setVisibility(View.INVISIBLE);
+
+        fillHashMap();
+        if(MainActivity.waitBar != null)
+            MainActivity.waitBar.setVisibility(View.INVISIBLE);
         setContentView(R.layout.activity_pokemon);
         BottomNavigationView bvn = findViewById(R.id.bottom_navigation);
-
         bvn.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int menuItemId =  item.getItemId();
 
                 if(menuItemId == R.id.home){
+                    Intent intent = new Intent(getApplicationContext(), CatchRandomPokemon.class);
+                    startActivity(intent);
                     return true;
                 }
                 else if(menuItemId == R.id.search){
-
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     return true;
@@ -112,6 +105,17 @@ public class PokemonActivity extends AppCompatActivity {
 
         String type1 = currentPokemon.getTypes().get(0).getName();
         String type2 = currentPokemon.getTypes().get(1).getName();
+
+        ArrayList<Ability> abilityList = currentPokemon.getAbilities();
+
+        String ability1 = abilityList.get(0).getName();
+        String ability2 = abilityList.get(1).getName();
+
+        Button abilityButton1 = findViewById(R.id.ability1);
+        Button abilityButton2 = findViewById(R.id.ability2);
+
+        abilityButton1.setText(ability1);
+        abilityButton2.setText(ability2);
 
         ImageView iType1 = findViewById(R.id.type1);
         iType1.setImageResource(typesImages.get(type1));
