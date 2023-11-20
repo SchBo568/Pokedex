@@ -41,7 +41,8 @@ public class Api {
         Random random = new Random();
         Pokemon pokemon = new Pokemon("charmander");
         // Generate a random number between 0 and 1016 (inclusive)
-        int randomNumber = random.nextInt(1017);
+        int randomNumber = random.nextInt(1016 - 1 + 1) + 1;
+
         try{
             URL url = new URL("https://pokeapi.co/api/v2/pokemon/" + randomNumber);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -49,12 +50,11 @@ public class Api {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             String jsonString = bufferedReader.readLine();
             JsonNode jsonNode = objectMapper.readTree(jsonString);
-            pokemon = new Pokemon(jsonNode.get("pokemon_species").get("name").asText());
+            pokemon = new Pokemon(jsonNode.get("name").asText());
             return pokemon;
-
         }
         catch(Exception e){
-            System.out.println("lol");
+            Log.d("random", e.toString());
         }
 
         return pokemon;

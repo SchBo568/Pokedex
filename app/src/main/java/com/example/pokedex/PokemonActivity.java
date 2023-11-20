@@ -100,7 +100,6 @@ public class PokemonActivity extends AppCompatActivity {
         Button backButton = (Button) findViewById(R.id.backButton);
         backButton.setOnClickListener(view -> {
             this.finish();
-
         });
 
         String type1 = currentPokemon.getTypes().get(0).getName();
