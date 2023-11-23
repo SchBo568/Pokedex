@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private boolean checkApi = true;
     private boolean pokemonDetails = false;
     private boolean loadCurrentPokemon = false;
+    private boolean loadCaughtPokemon = false;
+    private ArrayList<PokemonDB> caughtPokemon;
 
     //This needs to run under a second thread to avoid the network on main error
     private final Thread secondThread = new Thread(() -> {
@@ -52,6 +54,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 checkApi = false;
                 if(loadCurrentPokemon){
                     currentPokemon = new Pokemon(currentPokemonName);
+                }
+
+                if(loadCaughtPokemon){
+                    Log.d("ugabuga", "test: ");
+                    AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                            AppDatabase.class, "database-name").build();
+                    caughtPokemon = (ArrayList<PokemonDB>) db.pokemonDao().getAll();
+                    System.out.println(caughtPokemon);
                 }
             }
         }
@@ -127,15 +137,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     return true;
                 }
                 else if(menuItemId == R.id.search){
-
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     return true;
                 }
                 else if(menuItemId == R.id.profile){
+                    loadCaughtPokemon = true;
+                    checkApi = true;
+                    new Handler().postDelayed(() -> {
+                        Intent intent = new Intent(getApplicationContext(), Profile.class);
 
-                    Intent intent = new Intent(getApplicationContext(), Profile.class);
-                    startActivity(intent);
+                        intent.putExtra("caughtPokemon", caughtPokemon);
+                        startActivity(intent);
+
+                    }, 5000);
                     return true;
                 }
                 return true;
