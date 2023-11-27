@@ -1,25 +1,68 @@
 package com.example.pokedex;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.example.pokedex.roomDB.PokemonDB;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 
 public class Profile extends AppCompatActivity {
 
+    private ArrayAdapter<String> adapter;
+    ArrayList<PokemonDB> pokemonList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        ArrayList<PokemonDB> temp = (ArrayList<PokemonDB>) getIntent().getSerializableExtra("caughtPokemon");
-        for (int i = 0; i < temp.size(); i++) {
-            System.out.println(temp.get(i).pokemonCaught);
+        pokemonList = (ArrayList<PokemonDB>) getIntent().getSerializableExtra("caughtPokemon");
+        ArrayList<String> pokemonStringList = new ArrayList<>();
+
+        for (PokemonDB pokemon : pokemonList) {
+            pokemonStringList.add(pokemon.pokemonCaught);
         }
+
+        new Handler().postDelayed(() -> {
+            ListView listView = findViewById(R.id.pokemonList);
+            adapter = new ArrayAdapter<>(Profile.this, android.R.layout.simple_list_item_1, pokemonStringList);
+            listView.setAdapter(adapter);
+            runOnUiThread(() -> adapter.notifyDataSetChanged());
+        }, 3000);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int menuItemId =  item.getItemId();
+
+                if(menuItemId == R.id.home){
+                    Intent intent = new Intent(getApplicationContext(), CatchRandomPokemon.class);
+                    startActivity(intent);
+                    return true;
+                }
+                else if(menuItemId == R.id.search){
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                else if(menuItemId == R.id.profile){
+                    return true;
+                }
+                return true;
+            }
+        });
 
     }
 }

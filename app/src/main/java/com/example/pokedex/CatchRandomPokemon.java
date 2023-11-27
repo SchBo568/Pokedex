@@ -6,6 +6,7 @@ import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,23 +22,31 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CatchRandomPokemon extends AppCompatActivity {
 
     private Api api;
     private Pokemon currentPokemon;
-    private boolean pokemonShown = false;
-    private boolean addPokemonToDb = false;
-    private final Thread secondThread = new Thread(() -> {
+    private ArrayList<PokemonDB> caughtPokemon;
+    private boolean pokemonShown, addPokemonToDb, loadCaughtPokemon, checkApi = false;
+    public final Thread secondThread = new Thread(() -> {
         api = new Api();
         currentPokemon = api.getRandomPokemon();
         while(!addPokemonToDb){
             if(addPokemonToDb){
+                System.out.println("ungabunga");
                 AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "database-name").build();
                 db.pokemonDao().insert(new PokemonDB(currentPokemon.getName()));
-
+                //break;
+            }
+            if(loadCaughtPokemon){
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "database-name").build();
+                caughtPokemon = (ArrayList<PokemonDB>) db.pokemonDao().getAll();
             }
         }
     });
@@ -49,6 +58,29 @@ public class CatchRandomPokemon extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catch_random_pokemon);
         secondThread.start();
+
+        BottomNavigationView bvn = findViewById(R.id.bottom_navigation);
+        bvn.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int menuItemId =  item.getItemId();
+
+                if(menuItemId == R.id.home){
+                    Intent intent = new Intent(getApplicationContext(), CatchRandomPokemon.class);
+                    startActivity(intent);
+                    return true;
+                }
+                else if(menuItemId == R.id.search){
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                else if(menuItemId == R.id.profile){
+                    return true;
+                }
+                return true;
+            }
+        });
 
         while(!pokemonShown){
             if(currentPokemon != null){
@@ -88,11 +120,18 @@ public class CatchRandomPokemon extends AppCompatActivity {
                     return true;
                 }
                 else if(menuItemId == R.id.profile){
+                    loadCaughtPokemon = true;
+                    checkApi = true;
+                    new Handler().postDelayed(() -> {
+                        Intent intent = new Intent(getApplicationContext(), Profile.class);
+
+                        intent.putExtra("caughtPokemon", caughtPokemon);
+                        startActivity(intent);
+
+                    }, 3000);
                     return true;
                 }
                 return true;
             }
-        });
-        //TODO: 1) Choose a random pokemon 2) Button to catch it and put to internal db 3) only 1 capture every 2 hours 4) reroll once per day
-    }
+        });}
 }

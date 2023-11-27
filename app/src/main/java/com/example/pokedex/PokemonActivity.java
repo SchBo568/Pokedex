@@ -27,7 +27,6 @@ import java.util.HashMap;
 public class PokemonActivity extends AppCompatActivity {
 
     private Api api = new Api();
-    private boolean checkApi = false;
     private Pokemon currentPokemon;
     private String name = "";
     private boolean isLoaded = false;
@@ -59,11 +58,17 @@ public class PokemonActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_pokemon);
+
+        Button backButton = (Button) findViewById(R.id.backButton);
+        backButton.setOnClickListener(view -> {
+            this.finish();
+        });
 
         fillHashMap();
         if(MainActivity.waitBar != null)
             MainActivity.waitBar.setVisibility(View.INVISIBLE);
-        setContentView(R.layout.activity_pokemon);
+
         BottomNavigationView bvn = findViewById(R.id.bottom_navigation);
         bvn.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -90,17 +95,11 @@ public class PokemonActivity extends AppCompatActivity {
         name = getIntent().getStringExtra("name");
         currentPokemon = (Pokemon) getIntent().getSerializableExtra("pokemon");
 
-
         TextView pokemonNameView = findViewById(R.id.pokemonName);
         pokemonNameView.setText(name);
 
         ImageView pokemonImage = findViewById(R.id.pokemonImage);
         Picasso.get().load(currentPokemon.getImageURL()).into(pokemonImage);
-
-        Button backButton = (Button) findViewById(R.id.backButton);
-        backButton.setOnClickListener(view -> {
-            this.finish();
-        });
 
         String type1 = currentPokemon.getTypes().get(0).getName();
         String type2 = currentPokemon.getTypes().get(1).getName();
