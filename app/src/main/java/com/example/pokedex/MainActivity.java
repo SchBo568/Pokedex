@@ -30,7 +30,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private ListView listView;
-    public static ProgressBar waitBar;
+    public ProgressBar waitBar;
     private Api api = new Api();
     private ArrayAdapter<String> adapter;
     private ArrayList<String> pokemonList = new ArrayList<>();
@@ -41,14 +41,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private ArrayList<PokemonDB> caughtPokemon;
 
-    
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         api.secondThread.start();
         navigationSetup();
+
+        waitBar = findViewById(R.id.waitBar);
 
         generationSpinner = findViewById(R.id.generationSpinner);
         api.loadPokemonList(generationSpinner.getSelectedItem().toString());
@@ -61,13 +61,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void loadPokemonList(){
         new Handler().postDelayed(() -> {
             if(api.finishLoadingPokemonList){
-                Log.d("cringe", "loadPokemonList: finish");
                 pokemonList = api.getPokemonNames();
                 adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, pokemonList);
                 listView.setAdapter(adapter);
                 runOnUiThread(() -> adapter.notifyDataSetChanged());
                 generationSpinner.setOnItemSelectedListener(this);
                 handleSearchForPokemon();
+                waitBar.setVisibility(View.INVISIBLE);
             }
             else{
                 Log.d("Waiting", "loadPokemonList: ");
@@ -93,18 +93,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
     }
 
-    // This needs to run under a second thread to avoid the network on main error
-    
-
     public void navigateToPokemonDetails() {
         new Handler().postDelayed(() -> {
-            if (currentPokemon != null && currentPokemonName != null) {
+            if (currentPokemon == null) {
                 navigateToPokemonDetails();
             } else {
                 Intent intent = new Intent(getApplicationContext(), PokemonActivity.class);
+
                 intent.putExtra("pokemon", currentPokemon);
-                intent.putExtra("name", currentPokemonName);
+                intent.putExtra("name", currentPokemon.getName());
                 startActivity(intent);
+                currentPokemon = null;
+                currentPokemonName = null;
+                api.finishLoadingPokemonDetails = false;
             }
         }, 500);
     }
@@ -114,11 +115,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         pokemonListView.setOnItemClickListener((adapterView, view, i, l) -> {
             String currentPokemoName = pokemonListView.getItemAtPosition(i).toString();
+            currentPokemon = null;
             api.loadPokemonDetails(currentPokemoName);
+            if (waitBar != null) waitBar.setVisibility(View.VISIBLE);
+            while(!api.finishLoadingPokemonDetails){}
+            if (waitBar != null) waitBar.setVisibility(View.INVISIBLE);
+            currentPokemon = api.getCurrentPokemon();
+            System.out.println(currentPokemon);
 
-            if (waitBar != null)
-                waitBar.setVisibility(View.VISIBLE);
             navigateToPokemonDetails();
+
+
         });
 
     }
@@ -156,13 +163,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String generation = adapterView.getItemAtPosition(i).toString();
         api.loadPokemonList(generation);
         //TODO: Finish this transformation
+
         new Handler().postDelayed(() -> {
             pokemonList = api.getPokemonNames();
             adapter.addAll(pokemonList);
             handleSearchForPokemon();
             if (waitBar != null)
                 waitBar.setVisibility(View.INVISIBLE);
-        }, 3000);
+        }, 2000);
 
     }
 

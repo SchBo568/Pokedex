@@ -43,9 +43,7 @@ public class CatchRandomPokemon extends AppCompatActivity {
         loadRandomPokemon();
 
         System.out.println("outside condition");
-        while(!pokemonShown) {
-            System.out.println("inside condition");
-        }
+        while(!pokemonShown) {}
 
         if (currentPokemon != null) {
             pokemonShown = true;
@@ -58,7 +56,9 @@ public class CatchRandomPokemon extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    addPokemonToDb = true;
+                    catchPokemon();
+                    button.setEnabled(false);
+                    button.setText("Caught");
                 }
             });
         }
@@ -79,7 +79,14 @@ public class CatchRandomPokemon extends AppCompatActivity {
         //}, 500);
     }
 
+    public void catchPokemon(){
+        //api.catchRandomPokemon(currentPokemon.getName());
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database-name")
+                .allowMainThreadQueries() //not advised
+                .build();
+        db.pokemonDao().insert(new PokemonDB(currentPokemon.getName()));
 
+    }
 
     public void navigationSetup() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);

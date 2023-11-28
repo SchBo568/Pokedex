@@ -26,6 +26,7 @@ public class Pokemon implements Serializable {
     private int weight, height;
     private String imageURL;
     public int amountOfMoves;
+    public int id;
 
 
     public Pokemon(String name) {
@@ -44,7 +45,7 @@ public class Pokemon implements Serializable {
             }
 
             this.abilities = abilities;
-
+            this.id = jsonNode.get("id").asInt();
             this.weight = jsonNode.get("weight").asInt();
             this.height = jsonNode.get("height").asInt();
 

@@ -1,7 +1,5 @@
 package com.example.pokedex.network;
 
-import static org.chromium.base.ContextUtils.getApplicationContext;
-
 import android.util.Log;
 
 import androidx.room.Room;
@@ -29,24 +27,37 @@ public class Api {
     private ObjectMapper objectMapper = new ObjectMapper();
     private ArrayList<String> pokemonList = new ArrayList<>();
     private Map<String, Integer> lookup = new HashMap<>();
-    private String generation, currentPokemonName;
+    private String generation, currentPokemonName, randomPokemonName;
     private Pokemon currentPokemon, randomPokemon;
 
     public boolean finishLoadingPokemonList,finishLoadingPokemonDetails, finishLoadingRandomPokemon = false;
 
-    private boolean checkApi, loadCurrentPokemon, loadCaughtPokemon, loadPokemonList, loadRandomPokemon = false;
+    private boolean checkApi, loadCurrentPokemon, loadPokemonList, loadRandomPokemon = false;
 
     public final Thread secondThread = new Thread(() -> {
         while (true) {
             if (checkApi) {
                 checkApi = false;
                 if (loadPokemonList) loadPokemons(); loadPokemonList = false; checkApi = false;
-                if (loadCurrentPokemon) currentPokemon = new Pokemon(currentPokemonName); checkApi = false;
-                if (loadCaughtPokemon) loadCaughtPokemon(); checkApi = false;
+                if (loadCurrentPokemon){
+                    System.out.println("before creating new pokemon");
+                    currentPokemon = new Pokemon(currentPokemonName);
+                    System.out.println("after creating pokemon");
+                    while(currentPokemon == null) {
+
+                    }
+                    System.out.println("after while");
+                    checkApi = false;
+                    finishLoadingPokemonDetails = true;
+                }
                 if (loadRandomPokemon) getRandomPokemon(); checkApi = false;
             }
         }
     });
+
+    public Pokemon getCurrentPokemon() {
+        return currentPokemon;
+    }
 
     public Api() {
         lookup.put("kanto", 1);
@@ -69,6 +80,8 @@ public class Api {
     public Pokemon getRandomPokemonObject(){
         return randomPokemon;
     }
+
+
 
     private void getRandomPokemon() {
         Random random = new Random();
@@ -98,6 +111,7 @@ public class Api {
     }
 
     public void loadPokemonDetails(String pokemonName){
+        this.currentPokemon = null;
         loadCurrentPokemon = true;
         this.currentPokemonName = pokemonName;
         checkApi = true;
@@ -124,6 +138,8 @@ public class Api {
                 String pokemonName = pokemon.get("name").asText();
                 pokemonList.add(pokemonName);
             }
+
+
             httpURLConnection.disconnect();
 
             finishLoadingPokemonList = true;
@@ -144,11 +160,5 @@ public class Api {
             }
         }
         return result;
-    }
-
-    public ArrayList<PokemonDB> loadCaughtPokemon() {
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "database-name").build();
-        return (ArrayList<PokemonDB>) db.pokemonDao().getAll();
     }
 }

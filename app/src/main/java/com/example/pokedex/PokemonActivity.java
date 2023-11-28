@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.pokedex.helperClasses.CardAdapter;
@@ -27,6 +28,7 @@ import java.util.HashMap;
 public class PokemonActivity extends AppCompatActivity {
 
     private Api api = new Api();
+    private ProgressBar waitBar;
     private Pokemon currentPokemon;
     private String name = "";
     private boolean isLoaded = false;
@@ -60,37 +62,16 @@ public class PokemonActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokemon);
 
-        Button backButton = (Button) findViewById(R.id.backButton);
+        waitBar = findViewById(R.id.waitBar2);
+
+        Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(view -> {
             this.finish();
         });
 
         fillHashMap();
-        if(MainActivity.waitBar != null)
-            MainActivity.waitBar.setVisibility(View.INVISIBLE);
-
-        BottomNavigationView bvn = findViewById(R.id.bottom_navigation);
-        bvn.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int menuItemId =  item.getItemId();
-
-                if(menuItemId == R.id.home){
-                    Intent intent = new Intent(getApplicationContext(), CatchRandomPokemon.class);
-                    startActivity(intent);
-                    return true;
-                }
-                else if(menuItemId == R.id.search){
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                    return true;
-                }
-                else if(menuItemId == R.id.profile){
-                    return true;
-                }
-                return true;
-            }
-        });
+        if(waitBar != null)
+            waitBar.setVisibility(View.INVISIBLE);
 
         name = getIntent().getStringExtra("name");
         currentPokemon = (Pokemon) getIntent().getSerializableExtra("pokemon");
@@ -122,7 +103,7 @@ public class PokemonActivity extends AppCompatActivity {
         iType2.setImageResource(typesImages.get(type2));
 
         TextView weightTW = findViewById(R.id.weight);
-        String weight = "Weight: " + /*String.valueOf(currentPokemon.getWeight()) +*/ "g";
+        String weight = "Weight: " + String.valueOf(currentPokemon.getWeight()) + "g";
         weightTW.setText(weight);
 
         TextView heightTW = findViewById(R.id.height);
@@ -142,6 +123,21 @@ public class PokemonActivity extends AppCompatActivity {
 
     }
 
-    //TODO: Check API to get all information concerning this pokemon and put items slowly on the activity
-    //TODO: Check if there are images from the API
+    public void navigationSetup() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.home) {
+                Intent intent = new Intent(getApplicationContext(), CatchRandomPokemon.class);
+                startActivity(intent);
+            } else if (item.getItemId() == R.id.search) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            } else if (item.getItemId() == R.id.profile) {
+                Intent intent = new Intent(getApplicationContext(), Profile.class);
+                startActivity(intent);
+            }
+            return true;
+        });
+    }
 }
