@@ -30,12 +30,11 @@ public class Api {
     private ArrayList<String> pokemonList = new ArrayList<>();
     private Map<String, Integer> lookup = new HashMap<>();
     private String generation, currentPokemonName;
-    private Pokemon currentPokemon;
+    private Pokemon currentPokemon, randomPokemon;
 
-    public boolean finishLoadingPokemonList = false;
-    public boolean finishLoadingPokemonDetails = false;
+    public boolean finishLoadingPokemonList,finishLoadingPokemonDetails, finishLoadingRandomPokemon = false;
 
-    private boolean checkApi, loadCurrentPokemon, loadCaughtPokemon, loadPokemonList = false;
+    private boolean checkApi, loadCurrentPokemon, loadCaughtPokemon, loadPokemonList, loadRandomPokemon = false;
 
     public final Thread secondThread = new Thread(() -> {
         while (true) {
@@ -44,6 +43,7 @@ public class Api {
                 if (loadPokemonList) loadPokemons(); loadPokemonList = false; checkApi = false;
                 if (loadCurrentPokemon) currentPokemon = new Pokemon(currentPokemonName); checkApi = false;
                 if (loadCaughtPokemon) loadCaughtPokemon(); checkApi = false;
+                if (loadRandomPokemon) getRandomPokemon(); checkApi = false;
             }
         }
     });
@@ -60,25 +60,35 @@ public class Api {
         lookup.put("paldea", 9);
     }
 
-    public Pokemon getRandomPokemon() {
+    public void getRandomPokemonPublic(){
+        loadRandomPokemon = true;
+        checkApi = true;
+        System.out.println("setting booleans to true");
+    }
+
+    public Pokemon getRandomPokemonObject(){
+        return randomPokemon;
+    }
+
+    private void getRandomPokemon() {
         Random random = new Random();
-        Pokemon pokemon = new Pokemon("charmander");
         int randomNumber = random.nextInt(1016 - 1 + 1) + 1;
 
         try {
+            System.out.println("fetching random pokemon");
             URL url = new URL("https://pokeapi.co/api/v2/pokemon/" + randomNumber);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = httpURLConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             String jsonString = bufferedReader.readLine();
             JsonNode jsonNode = objectMapper.readTree(jsonString);
-            pokemon = new Pokemon(jsonNode.get("name").asText());
-            return pokemon;
+            Pokemon pokemon = new Pokemon(jsonNode.get("name").asText());
+            randomPokemon = pokemon;
+            finishLoadingRandomPokemon = true;
+            System.out.println("finished fertching pokemon");
         } catch (Exception e) {
-            Log.d("random", e.toString());
+            System.out.println(e);
         }
-
-        return pokemon;
     }
 
     public void loadPokemonList(String generation){
@@ -100,8 +110,6 @@ public class Api {
                 String[] split = generation.split(" ");
                 generationNumber = lookup.get(split[0].toLowerCase());
             }
-
-            Log.d("Waiting", "loadPokemons:  inside actual loading");
 
             // Pokedex:
             URL url = new URL("https://pokeapi.co/api/v2/generation/" + generationNumber);
