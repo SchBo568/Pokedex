@@ -41,6 +41,7 @@ public class Move implements Serializable {
 
             this.id = jsonNode.get("id").asInt();
             this.name = name;
+            
             JsonNode metaData = jsonNode.get("meta");
             this.ailment = metaData.get("ailment").get("name").asText();
             this.ailment_chance = metaData.get("ailment_chance").asInt();
@@ -71,13 +72,11 @@ public class Move implements Serializable {
             this.pp = jsonNode.get("pp").asInt();
             this.priority = jsonNode.get("priority").asInt();
             this.stat_changes = new HashMap<>();
-            //TODO: Check stat changes
             this.target = jsonNode.get("target").get("name").asText();
             this.type = jsonNode.get("type").get("name").asText();
             httpURLConnection.disconnect();
         }
         catch (Exception e){
-            Log.d("findMove", "Not found");
             this.name = "Not found";
         }
     }

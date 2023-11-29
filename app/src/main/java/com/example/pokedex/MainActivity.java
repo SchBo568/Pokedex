@@ -58,6 +58,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         selectPokemon();
     }
 
+    /*
+     * General information about load methods
+     * Load methods will loop inside themselves with a 500ms delay in ordr to check the api
+     * class for their corresponding finish variable
+     * 
+     */
     public void loadPokemonList(){
         new Handler().postDelayed(() -> {
             if(api.finishLoadingPokemonList){
@@ -75,6 +81,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         }, 500);
     }
+
+    /*
+     * The navigationSetup method can be found in every frontend class since it essentially does the same
+     * on every page.
+     * Yes I know this could certainly have been done otherwise
+     */
     public void navigationSetup() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -98,8 +110,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             if (currentPokemon == null) {
                 navigateToPokemonDetails();
             } else {
+                /*
+                    We fill the intent with all the pokemon information, so that the details screen
+                    does not have to do any work and just displays all the information
+                */
                 Intent intent = new Intent(getApplicationContext(), PokemonActivity.class);
-
                 intent.putExtra("pokemon", currentPokemon);
                 intent.putExtra("name", currentPokemon.getName());
                 startActivity(intent);
@@ -110,6 +125,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }, 500);
     }
 
+    /*
+     * This method defines the onclick event for when a user taps on one of the pokemon
+     */
     public void selectPokemon() {
         ListView pokemonListView = findViewById(R.id.pokemonList);
 
@@ -121,10 +139,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             while(!api.finishLoadingPokemonDetails){}
             if (waitBar != null) waitBar.setVisibility(View.INVISIBLE);
             currentPokemon = api.getCurrentPokemon();
-            System.out.println(currentPokemon);
-
             navigateToPokemonDetails();
-
 
         });
 
@@ -154,15 +169,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     
-
+    /*
+     * This method defines when an item from the generation spinner is selected
+     */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        if (waitBar != null)
-            waitBar.setVisibility(View.VISIBLE);
+        if (waitBar != null) waitBar.setVisibility(View.VISIBLE);
 
         String generation = adapterView.getItemAtPosition(i).toString();
         api.loadPokemonList(generation);
-        //TODO: Finish this transformation
 
         new Handler().postDelayed(() -> {
             pokemonList = api.getPokemonNames();

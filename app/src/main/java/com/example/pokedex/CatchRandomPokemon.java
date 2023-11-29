@@ -42,7 +42,6 @@ public class CatchRandomPokemon extends AppCompatActivity {
         navigationSetup();
         loadRandomPokemon();
 
-        System.out.println("outside condition");
         while(!pokemonShown) {}
 
         if (currentPokemon != null) {

@@ -22,8 +22,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Api {
-    // TODO: Think about renaming file to something else
-
     private ObjectMapper objectMapper = new ObjectMapper();
     private ArrayList<String> pokemonList = new ArrayList<>();
     private Map<String, Integer> lookup = new HashMap<>();
@@ -34,30 +32,34 @@ public class Api {
 
     private boolean checkApi, loadCurrentPokemon, loadPokemonList, loadRandomPokemon = false;
 
+    /*
+        A seperate thread is needed to conduct any work over the network.
+        How I approached this is to make public methods that set certain flags
+        inside this class and the thread waits until certain flags are set to true
+        before doing anything. This moves most of the logic to this class instead of the
+        "frontend" classes.
+
+        There are two different boolean variables that are very important in this class.
+        You have the load variables, which tell this class to execute certain methods
+        And you have the finished variables, which tell "frontend" class that a method has finished
+        so that they can wait until everything is fully loaded.
+    */
+
     public final Thread secondThread = new Thread(() -> {
         while (true) {
             if (checkApi) {
                 checkApi = false;
                 if (loadPokemonList) loadPokemons(); loadPokemonList = false; checkApi = false;
+                if (loadRandomPokemon) getRandomPokemon(); checkApi = false;
                 if (loadCurrentPokemon){
-                    System.out.println("before creating new pokemon");
                     currentPokemon = new Pokemon(currentPokemonName);
-                    System.out.println("after creating pokemon");
-                    while(currentPokemon == null) {
-
-                    }
-                    System.out.println("after while");
+                    while(currentPokemon == null) {/*wait*/}
                     checkApi = false;
                     finishLoadingPokemonDetails = true;
                 }
-                if (loadRandomPokemon) getRandomPokemon(); checkApi = false;
             }
         }
     });
-
-    public Pokemon getCurrentPokemon() {
-        return currentPokemon;
-    }
 
     public Api() {
         lookup.put("kanto", 1);
@@ -71,37 +73,21 @@ public class Api {
         lookup.put("paldea", 9);
     }
 
-    public void getRandomPokemonPublic(){
-        loadRandomPokemon = true;
-        checkApi = true;
-        System.out.println("setting booleans to true");
+    public ArrayList<String> getPokemonNames() {
+        return pokemonList;
+    }
+
+    public Pokemon getCurrentPokemon() {
+        return currentPokemon;
     }
 
     public Pokemon getRandomPokemonObject(){
         return randomPokemon;
     }
 
-
-
-    private void getRandomPokemon() {
-        Random random = new Random();
-        int randomNumber = random.nextInt(1016 - 1 + 1) + 1;
-
-        try {
-            System.out.println("fetching random pokemon");
-            URL url = new URL("https://pokeapi.co/api/v2/pokemon/" + randomNumber);
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            InputStream inputStream = httpURLConnection.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            String jsonString = bufferedReader.readLine();
-            JsonNode jsonNode = objectMapper.readTree(jsonString);
-            Pokemon pokemon = new Pokemon(jsonNode.get("name").asText());
-            randomPokemon = pokemon;
-            finishLoadingRandomPokemon = true;
-            System.out.println("finished fertching pokemon");
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+    public void getRandomPokemonPublic(){
+        loadRandomPokemon = true;
+        checkApi = true;
     }
 
     public void loadPokemonList(String generation){
@@ -117,6 +103,35 @@ public class Api {
         checkApi = true;
     }
 
+    /*
+        This method generates a random number and goes to search for a pokemon with this number
+        This pokemon will be shown at a specific screen in order to be caught and send to the internal database
+    */
+    private void getRandomPokemon() {
+        Random random = new Random();
+        int randomNumber = random.nextInt(1016 - 1 + 1) + 1;
+
+        try {
+            URL url = new URL("https://pokeapi.co/api/v2/pokemon/" + randomNumber);
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            InputStream inputStream = httpURLConnection.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String jsonString = bufferedReader.readLine();
+            JsonNode jsonNode = objectMapper.readTree(jsonString);
+            Pokemon pokemon = new Pokemon(jsonNode.get("name").asText());
+            randomPokemon = pokemon;
+            finishLoadingRandomPokemon = true;
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    /*
+        This method has the sole purpose to check the selected generation and then
+        generate a list with all pokemon from this generation.
+        For the list we only take the names of the pokemon and only later on
+        when clicking on one of the pokemon, the whole pokemon details get loaded
+    */
     private void loadPokemons() {
         try {
             int generationNumber = 1;
@@ -125,7 +140,6 @@ public class Api {
                 generationNumber = lookup.get(split[0].toLowerCase());
             }
 
-            // Pokedex:
             URL url = new URL("https://pokeapi.co/api/v2/generation/" + generationNumber);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = httpURLConnection.getInputStream();
@@ -138,18 +152,11 @@ public class Api {
                 String pokemonName = pokemon.get("name").asText();
                 pokemonList.add(pokemonName);
             }
-
-
             httpURLConnection.disconnect();
-
             finishLoadingPokemonList = true;
         } catch (Exception e) {
             e.printStackTrace();
         };
-    }
-
-    public ArrayList<String> getPokemonNames() {
-        return pokemonList;
     }
 
     public ArrayList<String> searchName(String input) {

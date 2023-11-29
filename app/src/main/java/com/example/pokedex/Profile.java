@@ -46,7 +46,6 @@ public class Profile extends AppCompatActivity {
                 .allowMainThreadQueries() //not advised
                 .build();
         ArrayList<PokemonDB> temp = (ArrayList<PokemonDB>) db.pokemonDao().getAll();
-        System.out.println(temp);
         return (ArrayList<PokemonDB>) db.pokemonDao().getAll();
     }
 

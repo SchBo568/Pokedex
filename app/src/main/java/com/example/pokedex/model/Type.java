@@ -39,17 +39,11 @@ public class Type implements Serializable {
             }
             catch(Exception e){
                 System.out.println(e);
-                Log.d("fucked", name);
-                System.out.println("You fucked up");
             }
         }
 
 
     }
-
-    /*public Type[] convert(){
-
-    }*/
 
     public String getName() {
         return name;

@@ -29,6 +29,13 @@ public class Pokemon implements Serializable {
     public int id;
 
 
+    /*
+        Whenever a new instance of a pokemon is created, the constructor searches for all
+        the needed information for itself and fills it in.
+
+        Small detail: Every pokemon has 2 types, but if the pokemon is a mono-type
+        it just gets a second type called "none"
+    */
     public Pokemon(String name) {
         this.name = name;/*name.substring(0,1).toUpperCase() + name.substring(1);*/
         try{
@@ -60,11 +67,6 @@ public class Pokemon implements Serializable {
             if(types.size() ==1){
                 types.add(new Type("none"));
             }
-
-            /*ArrayList<Move> moves = new ArrayList<>();
-            for(JsonNode move : jsonNode.get("moves")){
-                moves.add(new Move(move.get("move").get("name").asText()));
-            }*/
 
             ArrayList<String> moves = new ArrayList<>();
             amountOfMoves = jsonNode.get("moves").size();
@@ -98,8 +100,6 @@ public class Pokemon implements Serializable {
 
         return sMoves;
     }
-
-
 
     public ArrayList<String> getHeld_items() {
         return held_items;

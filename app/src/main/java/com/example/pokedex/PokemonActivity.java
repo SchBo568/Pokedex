@@ -34,7 +34,7 @@ public class PokemonActivity extends AppCompatActivity {
     private boolean isLoaded = false;
     private HashMap<String, Integer> typesImages = new HashMap<String, Integer>();
 
-
+    //This small hashmap makes filling in the images easier
     private void fillHashMap(){
         typesImages.put("normal", R.drawable.normal);
         typesImages.put("fire", R.drawable.fire);
@@ -65,17 +65,19 @@ public class PokemonActivity extends AppCompatActivity {
         waitBar = findViewById(R.id.waitBar2);
 
         Button backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(view -> {
-            this.finish();
-        });
+        backButton.setOnClickListener(view -> {this.finish();});
 
         fillHashMap();
-        if(waitBar != null)
-            waitBar.setVisibility(View.INVISIBLE);
+        if(waitBar != null) waitBar.setVisibility(View.INVISIBLE);
 
         name = getIntent().getStringExtra("name");
         currentPokemon = (Pokemon) getIntent().getSerializableExtra("pokemon");
 
+        fillInformations();
+
+    }
+
+    public void fillInformations() {
         TextView pokemonNameView = findViewById(R.id.pokemonName);
         pokemonNameView.setText(name);
 
@@ -110,17 +112,11 @@ public class PokemonActivity extends AppCompatActivity {
         String height = "Height: "+ String.valueOf(currentPokemon.getHeight()) + "cm";
         heightTW.setText(height);
 
-        /*ListView movesList = findViewById(R.id.movesList);
-        ArrayAdapter adapter = new ArrayAdapter<>(PokemonActivity.this, android.R.layout.simple_list_item_1, currentPokemon.getMoves());
-        movesList.setAdapter(adapter);
-        runOnUiThread(() -> adapter.notifyDataSetChanged());*/
-
         ArrayList<String> moves = currentPokemon.getSMoves();
         RecyclerView rw = findViewById(R.id.recylcerView1);
         CardAdapter ca = new CardAdapter(moves);
         rw.setAdapter(ca);
         rw.setLayoutManager(new LinearLayoutManager(this));
-
     }
 
     public void navigationSetup() {

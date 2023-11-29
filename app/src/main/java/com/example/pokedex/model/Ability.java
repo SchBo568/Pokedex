@@ -36,7 +36,7 @@ public class Ability implements Serializable {
             }
         }
         catch(Exception e){
-            System.out.println("lol");
+            System.out.println(e);
         }
 
     }
