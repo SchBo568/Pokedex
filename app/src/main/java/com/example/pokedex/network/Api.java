@@ -53,7 +53,9 @@ public class Api {
                 if (loadRandomPokemon) getRandomPokemon(); checkApi = false;
                 if (loadCurrentPokemon){
                     currentPokemon = new Pokemon(currentPokemonName);
+                    System.out.println("before while");
                     while(currentPokemon == null) {/*wait*/}
+                    System.out.println("after while");
                     checkApi = false;
                     finishLoadingPokemonDetails = true;
                 }

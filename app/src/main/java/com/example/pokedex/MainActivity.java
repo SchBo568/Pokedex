@@ -118,8 +118,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 intent.putExtra("pokemon", currentPokemon);
                 intent.putExtra("name", currentPokemon.getName());
                 startActivity(intent);
-                currentPokemon = null;
-                currentPokemonName = null;
+
                 api.finishLoadingPokemonDetails = false;
             }
         }, 500);
@@ -133,10 +132,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         pokemonListView.setOnItemClickListener((adapterView, view, i, l) -> {
             String currentPokemoName = pokemonListView.getItemAtPosition(i).toString();
-            currentPokemon = null;
             api.loadPokemonDetails(currentPokemoName);
             if (waitBar != null) waitBar.setVisibility(View.VISIBLE);
+            System.out.println("before second while");
             while(!api.finishLoadingPokemonDetails){}
+            System.out.println("after second while");
             if (waitBar != null) waitBar.setVisibility(View.INVISIBLE);
             currentPokemon = api.getCurrentPokemon();
             navigateToPokemonDetails();
